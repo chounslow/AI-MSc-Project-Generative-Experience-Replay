@@ -1,0 +1,14 @@
+ale_py==0.8.1
+gym==0.26.2
+gymnasium==0.29.1
+matplotlib==3.7.3
+numpy==1.24.4
+opencv_python==4.8.1.78
+pandas==2.0.3
+scikit_learn==1.4.2
+scipy==1.13.0
+seaborn==0.13.2
+torch==2.1.1+cu118
+torchsummary==1.5.1
+torchvision==0.16.1+cu118
+tqdm==4.66.1

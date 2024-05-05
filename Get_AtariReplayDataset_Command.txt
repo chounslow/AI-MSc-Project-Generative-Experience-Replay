@@ -1,0 +1,7 @@
+The following 2 commands can be run from the CMD line to import AtariReplayDatasets
+
+You will need to source your python install and replace below, and adjust for each game you want to install.
+
+set CLOUDSDK_PYTHON=C:\ProgramData\anaconda3\python.exe
+
+gsutil -m cp -R "gs://atari-replay-datasets/dqn/SpaceInvaders" .
