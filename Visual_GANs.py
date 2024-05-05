@@ -1,7 +1,6 @@
-# This script is used to create GANs for visual states only and not full RL experiences.
-
 import torch
 from torch import nn
+from torch.autograd import Variable
 
 # Generator, Discriminator & Critic Code adapted from https://www.coursera.org/specializations/generative-adversarial-networks-gans
 # Generative Adversarial Networks (GANs) Specialization [3 courses] (DeepLearning.AI) | Coursera [Online], n.d. Available from: https://www.coursera.org/specializations/generative-adversarial-networks-gans [Accessed 4 May 2024].
@@ -200,6 +199,32 @@ class Critic(nn.Module):
         '''
         crit_pred = self.crit(image)
         return crit_pred.view(len(crit_pred), -1)
+
+def compute_gradient_penalty(D, real_samples, fake_samples):
+    """Calculates the gradient penalty loss for WGAN GP"""
+    Tensor = torch.cuda.FloatTensor
+    
+    batch_size = real_samples.size(0)
+    
+    # Random weight term for interpolation between real and fake samples
+    alpha = Tensor(np.random.random((batch_size, 1, 1, 1)))
+    # alpha = torch.rand(batch_size, 1, 1, 1)
+    # Get random interpolation between real and fake samples
+    interpolates = (alpha * real_samples + ((1 - alpha) * fake_samples)).requires_grad_(True)
+    d_interpolates = D(interpolates)
+    fake = Variable(Tensor(real_samples.shape[0], 1).fill_(1.0), requires_grad=False)
+    # Get gradient w.r.t. interpolates
+    gradients = torch.autograd.grad(
+        outputs=d_interpolates,
+        inputs=interpolates,
+        grad_outputs=fake,
+        create_graph=True,
+        retain_graph=True,
+        only_inputs=True,
+    )[0]
+    gradients = gradients.view(gradients.size(0), -1)
+    gradient_penalty = ((gradients.norm(2, dim=1) - 1) ** 2).mean()
+    return gradient_penalty
     
 class DiscriminatorSN(nn.Module):
     '''

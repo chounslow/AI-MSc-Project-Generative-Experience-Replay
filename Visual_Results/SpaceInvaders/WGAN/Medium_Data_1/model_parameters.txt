@@ -1,0 +1,12 @@
+game=SpaceInvaders
+gan_type=WGAN
+z_dim=64
+batch_size=64
+data_size=50000
+n_epochs=8
+c_lambda=10
+crit_repeats=5
+lr=0.0002
+beta_1=0.5
+beta_2=0.999
+lambda_gp=10
